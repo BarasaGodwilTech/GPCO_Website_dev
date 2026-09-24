@@ -1,0 +1,242 @@
+/* ==========================================================================
+   Responsive rules
+   Breakpoints: 1024 (tablet), 860 (nav switch), 680 (large phone),
+   560 (phone), 400 (small phone), 340 (very small phone)
+   ========================================================================== */
+
+/* ---------- 1024px — tablets / small laptops ---------- */
+@media (max-width: 1024px){
+  .schools-grid{ grid-template-columns: repeat(2, 1fr); }
+  .stats-grid{ grid-template-columns: repeat(2, 1fr); row-gap: 2.2rem; }
+  .programs-grid{ grid-template-columns: 1fr; }
+  .values-grid, .values-grid.cols-4{ grid-template-columns: repeat(3, 1fr); }
+  .message-block, .message-block.split-even{ grid-template-columns: 1fr; margin-bottom: 2.4rem; }
+  .message-block img{ max-width: 380px; margin-inline: auto; }
+  .contact-grid{ grid-template-columns: 1fr; }
+  .footer-grid{ grid-template-columns: 1fr 1fr; }
+  .school-feature, .school-feature.reverse{ grid-template-columns: 1fr; gap: 0; }
+  .school-feature .media, .school-feature.reverse .media{ order: 0; min-height: 280px; }
+  .school-feature .body, .school-feature.reverse .body{ order: 1; }
+}
+
+/* ---------- 860px — mobile nav takes over ---------- */
+@media (max-width: 860px){
+  /* ----- mobile menu (hamburger + slide-in drawer) ----- */
+  /* backdrop-filter on the header would trap the fixed drawer inside it, so drop it on mobile */
+  .site-header.scrolled{ -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(246,241,226,.97); }
+  .nav-cta{ position: relative; z-index: 95; }           /* keeps the toggle (X) above the drawer */
+  .nav-cta .btn{ transition: opacity .25s; }
+  .nav-toggle{ display: block; transition: background .3s, border-color .3s; }
+
+  .nav-links{
+    position: fixed; top: 0; right: 0; bottom: 0; left: auto;
+    width: min(340px, 86vw); height: 100vh; height: 100dvh;
+    background: linear-gradient(170deg, var(--pasture-deep) 0%, #1a3016 100%);
+    box-shadow: -24px 0 60px rgba(10,20,10,.35);
+    flex-direction: column; align-items: stretch; justify-content: flex-start;
+    padding: 5.4rem 1.8rem calc(1.6rem + env(safe-area-inset-bottom, 0px));
+    gap: 0;
+    transform: translateX(100%);
+    visibility: hidden;                                    /* closed links can't be tabbed to */
+    transition: transform .45s var(--ease), visibility 0s linear .45s;
+    z-index: 90;
+    overflow-y: auto; overscroll-behavior: contain;
+  }
+  .nav-links.open{ transform: none; visibility: visible; transition: transform .45s var(--ease), visibility 0s; }
+  .nav-links::before{
+    content: "Menu";
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold-bright); margin-bottom: .5rem;
+  }
+  .nav-links::after{
+    content: "Uganda \00B7  Since 1998";
+    margin-top: auto; padding-top: 2rem;
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(246,241,226,.45);
+  }
+  .nav-links a{
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 54px; padding: .9rem 0;
+    font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; letter-spacing: -.01em;
+    color: var(--cream) !important;
+    border-bottom: 1px solid rgba(246,241,226,.12);
+    opacity: 0; transform: translateX(18px);
+    transition: opacity .4s var(--ease), transform .4s var(--ease), color .2s;
+  }
+  .nav-links a::after{                                     /* chevron instead of the desktop underline */
+    content: ""; position: static; right: auto; bottom: auto;
+    width: 8px; height: 8px; background: none;
+    border-top: 2px solid currentColor; border-right: 2px solid currentColor;
+    transform: rotate(45deg); opacity: .4; transition: opacity .3s;
+  }
+  .nav-links a.active{ color: var(--gold-bright) !important; }
+  .nav-links a.active::after{ opacity: 1; }
+  .nav-links a:active{ background: rgba(246,241,226,.06); }
+  .nav-links.open a{ opacity: 1; transform: none; }
+  .nav-links.open a:nth-child(1){ transition-delay: .10s; }
+  .nav-links.open a:nth-child(2){ transition-delay: .15s; }
+  .nav-links.open a:nth-child(3){ transition-delay: .20s; }
+  .nav-links.open a:nth-child(4){ transition-delay: .25s; }
+  .nav-links.open a:nth-child(5){ transition-delay: .30s; }
+  .nav-links.open a:nth-child(6){ transition-delay: .36s; }
+  .nav-links a.nav-drawer-cta{
+    display: inline-flex; justify-content: center;
+    margin-top: 1.6rem; min-height: 0; padding: .95rem 1.4rem;
+    border-bottom: 0; border-radius: 999px;
+    font-family: var(--font-body); font-size: 1rem; font-weight: 700; letter-spacing: 0;
+    color: #221703 !important;
+  }
+  .nav-links a.nav-drawer-cta::after{ display: none; }
+
+  /* toggle turns into a clear X that stays visible on the dark drawer */
+  .site-header .nav-toggle.open,
+  .site-header.scrolled .nav-toggle.open{ background: rgba(246,241,226,.1); border-color: rgba(246,241,226,.45); }
+  .site-header .nav-toggle.open span,
+  .site-header.scrolled .nav-toggle.open span{ background: transparent; }
+  .site-header .nav-toggle.open span::before,
+  .site-header .nav-toggle.open span::after,
+  .site-header.scrolled .nav-toggle.open span::before,
+  .site-header.scrolled .nav-toggle.open span::after{ background: var(--cream); }
+
+  .nav-scrim{
+    position: fixed; inset: 0; background: rgba(14,24,15,.68); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none; transition: opacity .4s var(--ease); z-index: 80;
+  }
+  .nav-scrim.open{ opacity: 1; pointer-events: auto; }
+
+  /* while the menu is open: lock page scroll, clear the header bar, hide the header CTA (it's in the drawer) */
+  html.nav-open, html.nav-open body{ overflow: hidden; }
+  html.nav-open .site-header, html.nav-open .site-header.scrolled{ background: transparent; box-shadow: none; }
+  html.nav-open .site-header .brand-text strong{ color: var(--cream); }
+  html.nav-open .nav-cta .btn{ opacity: 0; pointer-events: none; }
+
+  /* ----- dropdowns: swap the native <select> for the contained custom list ----- */
+  .cselect{ display: block; }
+  .form-field select.has-cselect{ display: none; }
+  .form-field input, .form-field textarea{ font-size: 16px; }   /* stops iOS zooming the page on focus */
+
+  .hero-locations .container{ grid-template-columns: 1fr; gap: .9rem; }
+  .hero-locations .loc-row{ grid-template-columns: 1fr; row-gap: .9rem; }
+  .hero-locations .loc{ border-left: none; padding-left: 0; border-top: 1px solid rgba(246,241,226,.14); padding-top: .9rem; }
+  .hero-locations .loc:first-child{ border-top: none; padding-top: 0; }
+
+  .schools-grid{ grid-template-columns: 1fr; }
+  .values-grid, .values-grid.cols-4{ grid-template-columns: repeat(2, 1fr); }
+  .cta-band{ flex-direction: column; align-items: flex-start; }
+  .cta-band .cta-actions{ width: 100%; }
+}
+
+/* ---------- 680px — large phones (landscape phones / phablets) ---------- */
+@media (max-width: 680px){
+  .container{ width: min(1180px, 100% - 2.4rem); }
+  .section{ padding: 4.8rem 0; }
+  .section-tight{ padding: 3.6rem 0; }
+  .section-head{ margin-bottom: 2.4rem; }
+  .hero-inner{ padding: 7rem 0 4rem; }
+  .hero-actions{ margin-bottom: 2.4rem; }
+  .hero-actions .btn{ width: 100%; justify-content: center; }
+  .page-hero{ padding: 9rem 0 4rem; }
+  .footer-grid{ gap: 2rem; }
+  .partners-row{ justify-content: center; text-align: center; }
+  .contact-card{ padding: 1.2rem 1.3rem; }
+}
+
+/* ---------- 560px — phones ---------- */
+@media (max-width: 560px){
+  .section{ padding: 4.2rem 0; }
+  .stats-grid{ grid-template-columns: 1fr 1fr; }
+  .form-row{ grid-template-columns: 1fr; }
+  .footer-grid{ grid-template-columns: 1fr; gap: 2rem; }
+  .footer-bottom{ flex-direction: column; align-items: flex-start; }
+  .page-hero{ padding: 8.5rem 0 3.5rem; }
+  .values-grid{ grid-template-columns: 1fr 1fr; }
+  .cta-band{ padding: 2.2rem; }
+  .cta-band h3{ font-size: 1.35rem; }
+
+  /* "Christian Outreach" tagline stays visible under "Green Pasture" on phones */
+  .brand-text strong{ font-size: .95rem; }
+  .brand-text span{ font-size: .56rem; letter-spacing: .09em; margin-top: 2px; white-space: nowrap; }
+  .site-header:not(.scrolled) .brand-text span{ color: var(--gold-bright); }
+  .site-header.scrolled .brand-text span{ color: #9A6614; }
+  html.nav-open .site-header .brand-text span{ color: var(--gold-bright); }
+
+  /* hero logo — bigger on phones only (desktop/tablet stay at 60px) */
+  .hero-locations-logo{ margin-bottom: 1.2rem; }
+  .hero-locations-logo img{ height: 96px; }
+  .nav-cta{ gap: .6rem; }
+  .nav-cta .btn{ padding: .65rem .9rem; font-size: .82rem; }
+
+  .hero h1{ max-width: 100%; }
+  .hero-sub{ max-width: 100%; }
+  .hero-scroll{ display: none; }
+
+  .school-card .media{ height: 180px; }
+  .school-feature .media, .school-feature.reverse .media{ height: auto; min-height: 220px; }
+  .program-card{ padding: 1.5rem; }
+  .contact-grid{ gap: 1.6rem; }
+  .dusk{ padding: 5.5rem 0; }
+  .dusk-verse{ margin-top: 2rem; padding-top: 1.5rem; }
+
+  .timeline{ padding-left: 1.9rem; }
+  .tl-item::before{ left: -1.9rem; }
+}
+
+/* ---------- 400px — small phones (SE, small Android) ---------- */
+@media (max-width: 400px){
+  .container{ width: min(1180px, 100% - 2rem); }
+  .btn{ padding: .8rem 1.3rem; font-size: .9rem; }
+  .eyebrow{ font-size: .66rem; }
+
+  .brand-mark{ width: 34px; height: 34px; }
+  .brand-mark svg{ width: 18px; height: 18px; }
+  .brand-text strong{ font-size: .88rem; }
+  .brand-text span{ font-size: .52rem; letter-spacing: .08em; }
+  .nav-toggle{ width: 38px; height: 38px; }
+  .nav-cta .btn{ display: none; }
+
+  .hero{ min-height: 100vh; min-height: 100svh; }
+  .hero-inner{ padding: 6.5rem 0 3rem; }
+  .hero-kicker{ font-size: .7rem; }
+  .hero-locations-logo img{ height: 88px; }
+  .loc{ font-size: .68rem; }
+  .loc b{ font-size: .85rem; }
+
+  .stats-grid{ grid-template-columns: 1fr 1fr; gap: 1.4rem 1rem; }
+  .stat b{ font-size: 1.85rem; }
+  .values-grid, .values-grid.cols-4{ grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .value-pill{ padding: 1.2rem .7rem; }
+
+  .schools-grid{ gap: 1.1rem; }
+  .school-card .body{ padding: 1.3rem 1.3rem 1.6rem; }
+  .school-card h3{ font-size: 1.15rem; }
+  .school-feature .media, .school-feature.reverse .media{ min-height: 190px; }
+  .school-feature .body h3{ font-size: 1.3rem; }
+
+  .program-card{ padding: 1.3rem; }
+  .contact-card{ flex-direction: column; }
+  .contact-card .ic{ width: 34px; height: 34px; }
+
+  .footer-social a{ width: 34px; height: 34px; }
+  .footer-bottom{ font-size: .76rem; }
+
+  .cta-band{ padding: 1.8rem; }
+  .cta-band .cta-actions .btn{ width: 100%; justify-content: center; }
+
+  .dusk-quote{ font-size: 1.02rem; }
+  .message-block img{ max-width: 100%; }
+}
+
+/* ---------- 340px — very small phones ---------- */
+@media (max-width: 340px){
+  .stats-grid{ grid-template-columns: 1fr; }
+  .values-grid, .values-grid.cols-4{ grid-template-columns: 1fr; }
+  .hero h1{ font-size: 2.1rem; }
+  .hero-locations-logo img{ height: 76px; }
+  .page-hero h1{ font-size: 1.8rem; }
+}
+
+/* ---------- fine-tuning for touch targets & mobile viewport height ---------- */
+@media (max-width: 860px){
+  a, button{ -webkit-tap-highlight-color: rgba(198,137,46,.25); }
+  .hero{ min-height: 100vh; min-height: 100svh; }
+}
